@@ -73,7 +73,7 @@ def handle_message(event):
     getMesege = event.message.text;# ユーザが送信したメッセージ(event.message.text)を取得
     keyword = ['なにこれ','祭り','ヘルプ','今は昼だよね','真夜中のカーニバル']
 
-    if getMesege = not in keyword:
+    if getMesege not in keyword:
         if flag == 0:
             message = getMesege + 'だあああああぁぁぁぁぁ'#通常モードはオウム返し
         elif flag == 1:
