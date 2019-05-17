@@ -40,7 +40,7 @@ try:
     handler.handle(body, signature)
     # 署名検証で失敗した場合、例外を出す。
 except InvalidSignatureError:
-abort(400)
+    abort(400)
     # handleの処理を終えればOK
 return 'OK'
 
