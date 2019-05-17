@@ -66,8 +66,7 @@ def callback():
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     getMesege = event.message.text;# ユーザが送信したメッセージ(event.message.text)を取得
-    keyword = ['なにこれ','祭り','ヘルプ',]
-    imgKeyWord ['の画像']
+    keyword = ['なにこれ','ヘルプ',]
 
     if getMesege not in keyword:
         message = getMesege + 'だあああああぁぁぁぁぁ'#通常モードはオウム返し
@@ -75,14 +74,12 @@ def handle_message(event):
     elif getMesege == 'なにこれ':#キーワードでモード変更
         message = '私はまつりちゃん．お祭り大好き！「お祭り」と打つとお祭りを始めるよ！私が何のお祭りやるか聞くから，やりたいお祭りを打ってね！\nお祭りって言っても，ただBing画像検索で検索して出てくる画像を適当に選んで君に送信するだけだけどね(笑)'
 
-    elif getMesege == '祭り':
-        message = 'なんの祭り????'
+    elif getMesege in 'の画像':
+        message = 'ここに画像が来る予定です．'
 
     elif getMesege == 'ヘルプ':
         message = '「なにこれ」：このBOTの説明をするよ\n「祭り」：祭りを始めるよ\n「ヘルプ」：これ\n「今は昼だね」：セーフサーチオン\n'
 
-    elif getMesege in imgKeyWord:
-        message = 'ここに画像が来る予定です．'
 
     line_bot_api.reply_message(
         event.reply_token,
