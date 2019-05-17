@@ -29,11 +29,6 @@ MSBING_IMAGE_SUBSCRIPTION_KEY= os.environ["MSBING_IMAGE_SUBSCRIPTION_KEY"]
 line_bot_api = LineBotApi(LINE_BOT_CHANNEL_TOKEN)
 handler = WebhookHandler(LINE_BOT_CHANNEL_SECRET)
 
-#モードフラグ
-#通常時：0，お祭り待機状態：1　お祭り状態：２
-flag = 0
-safeSerchFlag = "ON"
-
 ## 1 ##
 # Webhookからのリクエストをチェックします。
 @app.route("/callback", methods=['POST'])
@@ -106,6 +101,10 @@ def handle_message(event):
 
 # ポート番号の設定
 if __name__ == "__main__":
+    #モードフラグ
+    #通常時：0，お祭り待機状態：1　お祭り状態：２
+    flag = 0
+    safeSerchFlag = "ON"
     #    app.run()
     port = int(os.getenv("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
