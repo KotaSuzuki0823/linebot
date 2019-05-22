@@ -63,7 +63,7 @@ def callback():
 #　user registration
 def register():
     r_endpoint = 'https://api.apigw.smt.docomo.ne.jp/naturalChatting/v1/registration?APIKEY=REGISTER_KEY'
-    r_url = r_endpoint.replace('REGISTER_KEY', KEY)
+    r_url = r_endpoint.replace('REGISTER_KEY', DOCOMOAPI_API_KEY)
     r_headers = {'Content-type': 'application/json'}
     pay = {
         "botId": "Chatting",
