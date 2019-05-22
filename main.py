@@ -94,8 +94,8 @@ def reply(appId, utt_content):
     return response
 
 ## 2 ##
-############################################################################################################################################################################################################################################
-# LINEのメッセージの取得と返信内容の設定(オウム返し)
+####################################################################################################################################################
+# LINEのメッセージの取得と返信内容の設定
 ###############################################
 
 # LINEでMessageEvent（普通のメッセージを送信された場合）が起こった場合に、
@@ -113,19 +113,20 @@ def replyMessageText(event, message):
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     getMessage = event.message.text;# ユーザが送信したメッセージ(event.message.text)を取得
-    keyword = ['なにこれ','ヘルプ',];
+    keyword = ['なにこれ','ヘルプ','仕組み'];
 
     if getMessage not in keyword:
         appId = register()
         message = reply(appId,getMessage)
         replyMessageText(event, message)
 
-    elif getMessage == 'なにこれ':#キーワードでモード変更
-        message = '私はまつりちゃん．君が送った言葉の画像を返信するよ\nBing画像検索で検索して出てくる画像を適当に選んで君に送信するだけだけどね(笑)'
+    elif getMessage == 'なにこれ':
+        message = '私はまつりちゃん．君の言葉に反応するよ！'
         replyMessageText(event, message)
 
-    elif getMessage in 'の画像':
-        TextSendMessage(text=message) # 返信メッセージ
+elif getMessage == '仕組み':
+        message = 'メッセージの送信と受信はLINEのMessageAPIを使用しているよ！このAPIで取得した君の送信内容をDoCoMoの雑談対話APIを使って返信内容を考えてるよ！'
+        replyMessageText(event, message)
 
     elif getMessage == 'ヘルプ':
         message = '「なにこれ」：このBOTの説明をするよ\n「ヘルプ」：これ\n'
