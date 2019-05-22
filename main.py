@@ -29,7 +29,7 @@ DOCOMOAPI_CLIENT_SECRET = os.environ["DOCOMOAPI_CLIENT_SECRET"]
 
 DOCOMOAPI_API_KEY= os.environ["DOCOMOAPI_API_KEY"]
 
-
+APPID = register()
 line_bot_api = LineBotApi(LINE_BOT_CHANNEL_TOKEN)
 handler = WebhookHandler(LINE_BOT_CHANNEL_SECRET)
 
@@ -79,9 +79,9 @@ def reply(appId, utt_content):
     payload = {
         "language": "ja-JP",
         "botId": "Chatting",
-        "appId": appId,
+        "appId": APPID,
         "voiceText": utt_content,
-        "appRecvTime": "2018-06-11 22:44:22",  # 仮置き。これで動いてしまう。
+        "appRecvTime": "2019-05-11 22:44:22",  # 仮置き。これで動いてしまう。
         "appSendTime": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     }
     # Transmission
@@ -113,23 +113,28 @@ def replyMessageText(event, message):
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     getMessage = event.message.text;# ユーザが送信したメッセージ(event.message.text)を取得
-    keyword = ['なにこれ','ヘルプ','仕組み'];
+    keyword = ['なにこれ','ヘルプ','仕組み','リセット'];
 
     if getMessage not in keyword:
-        appId = register()
-        message = reply(appId,getMessage)
+        #appId = register()
+        message = reply(APPID,getMessage)
         replyMessageText(event, message)
 
     elif getMessage == 'なにこれ':
         message = '私はまつりちゃん．君の言葉に反応するよ！'
         replyMessageText(event, message)
 
-elif getMessage == '仕組み':
+    elif getMessage == '仕組み':
         message = 'メッセージの送信と受信はLINEのMessageAPIを使用しているよ！このAPIで取得した君の送信内容をDoCoMoの雑談対話APIを使って返信内容を考えてるよ！'
         replyMessageText(event, message)
 
     elif getMessage == 'ヘルプ':
         message = '「なにこれ」：このBOTの説明をするよ\n「ヘルプ」：これ\n'
+        replyMessageText(event, message)
+
+    elif getMessage == 'リセット':
+        APPID = register()
+        message = 'APPIDをリセットしました'
         replyMessageText(event, message)
 
 # ポート番号の設定
