@@ -116,6 +116,7 @@ def handle_message(event):
     keyword = ['なにこれ','ヘルプ',];
 
     if getMessage not in keyword:
+        appId = register()
         message = reply(appId,getMessage)
         replyMessageText(event, message)
 
@@ -133,6 +134,5 @@ def handle_message(event):
 # ポート番号の設定
 if __name__ == "__main__":
     #    app.run()
-    appId = register()
     port = int(os.getenv("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
