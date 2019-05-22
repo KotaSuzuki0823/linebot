@@ -18,18 +18,22 @@ import math
 app = Flask(__name__)
 
 # 環境変数取得
-# LINE Developersで設定されているアクセストークンとChannel Secretをを取得し、設定します。
+# アクセストークンとChannel Secretをを取得し、設定
 LINE_BOT_CHANNEL_TOKEN = os.environ["LINE_BOT_CHANNEL_TOKEN"]
 LINE_BOT_CHANNEL_SECRET = os.environ["LINE_BOT_CHANNEL_SECRET"]
 
+DOCOMOAPI_CLIENT_ID = os.environ["DOCOMOAPI_CLIENT_ID"]
+DOCOMOAPI_CLIENT_SECRET = os.environ["DOCOMOAPI_CLIENT_SECRET"]
+
+DOCOMOAPI_API_KEY= os.environ["DOCOMOAPI_API_KEY"]
+
+
 line_bot_api = LineBotApi(LINE_BOT_CHANNEL_TOKEN)
 handler = WebhookHandler(LINE_BOT_CHANNEL_SECRET)
-headers = {
-    'Content-Type': 'multipart/form-data',
-    'Ocp-Apim-Subscription-Key': MSBING_IMAGE_SUBSCRIPTION_KEY,
-}
 
-
+# リクエストクエリ
+endpoint = 'https://api.apigw.smt.docomo.ne.jp/naturalChatting/v1/dialogue?APIKEY=REGISTER_KEY'
+url = endpoint.replace('REGISTER_KEY', DOCOMOAPI_API_KEY)
 
 ## 1 ##
 # Webhookからのリクエストをチェックします。
@@ -53,7 +57,39 @@ def callback():
     # handleの処理を終えればOK
     return 'OK'
 
+#DoCoMo自然対話API
+#　user registration
+def register():
+    r_endpoint = 'https://api.apigw.smt.docomo.ne.jp/naturalChatting/v1/registration?APIKEY=REGISTER_KEY'
+    r_url = r_endpoint.replace('REGISTER_KEY', KEY)
+    r_headers = {'Content-type': 'application/json'}
+    pay = {
+        "botId": "Chatting",
+        "appKind": "Smart Phone"
+    }
+    r = requests.post(r_url, data=json.dumps(pay), headers=r_headers)
+    appId = r.json()['appId']
+    return appId
 
+#返信
+def reply(appId, utt_content):
+    headers = {'Content-type': 'application/json;charset=UTF-8'}
+    payload = {
+        "language": "ja-JP",
+        "botId": "Chatting",
+        "appId": appId,
+        "voiceText": utt_content,
+        "appRecvTime": "2018-06-11 22:44:22",  # 仮置き。これで動いてしまう。
+        "appSendTime": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    }
+    # Transmission
+    r = requests.post(url, data=json.dumps(payload), headers=headers)
+    data = r.json()
+    # rec_time = data['serverSendTime']
+    response = data['systemText']['expression']
+
+    #print("response: %s" % response)
+    return response
 
 ## 2 ##
 ############################################################################################################################################################################################################################################
@@ -75,10 +111,10 @@ def replyMessageText(event, message):
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     getMessage = event.message.text;# ユーザが送信したメッセージ(event.message.text)を取得
-    keyword = ['なにこれ','ヘルプ','の画像'];
+    keyword = ['なにこれ','ヘルプ',];
 
     if getMessage not in keyword:
-        message = getMessage + 'だあああああぁぁぁぁぁ'#通常モードはオウム返し
+        message = reply(appId,getMessage)
         replyMessageText(event, message)
 
     elif getMessage == 'なにこれ':#キーワードでモード変更
@@ -86,18 +122,15 @@ def handle_message(event):
         replyMessageText(event, message)
 
     elif getMessage in 'の画像':
-        #TextSendMessage(text=message) # 返信メッセージ
+        TextSendMessage(text=message) # 返信メッセージ
 
     elif getMessage == 'ヘルプ':
         message = '「なにこれ」：このBOTの説明をするよ\n「ヘルプ」：これ\n'
         replyMessageText(event, message)
 
-
-
-
-
 # ポート番号の設定
 if __name__ == "__main__":
     #    app.run()
+    appId = register()
     port = int(os.getenv("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
