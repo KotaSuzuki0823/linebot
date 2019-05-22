@@ -18,7 +18,6 @@ import json
 from _datetime import datetime
 
 app = Flask(__name__)
-APPID = register()
 
 # 環境変数取得
 # アクセストークンとChannel Secretをを取得し、設定
@@ -72,7 +71,7 @@ def register():
     r = requests.post(r_url, data=json.dumps(pay), headers=r_headers)
     appId = r.json()['appId']
     return appId
-
+    
 #返信
 def reply(appId, utt_content):
     headers = {'Content-type': 'application/json;charset=UTF-8'}
@@ -110,10 +109,10 @@ def replyMessageText(event, message):
 
 
 # ここで返信メッセージを作成
+APPID = register()
 while True:
     if flag is True:
         global APPID
-        APPID = register()
         flag = False
 
     @handler.add(MessageEvent, message=TextMessage)
