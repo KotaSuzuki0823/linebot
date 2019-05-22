@@ -18,7 +18,7 @@ import json
 from _datetime import datetime
 
 app = Flask(__name__)
-APPID = '';
+APPID = register()
 
 # 環境変数取得
 # アクセストークンとChannel Secretをを取得し、設定
@@ -112,9 +112,10 @@ def replyMessageText(event, message):
 # ここで返信メッセージを作成
 while True:
     if flag is True:
+        global APPID
         APPID = register()
         flag = False
-        
+
     @handler.add(MessageEvent, message=TextMessage)
     def handle_message(event):
 
