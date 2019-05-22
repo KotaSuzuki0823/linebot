@@ -110,39 +110,42 @@ def replyMessageText(event, message):
 
 
 # ここで返信メッセージを作成
-@handler.add(MessageEvent, message=TextMessage)
-def handle_message(event):
-    global APPID
-    if APPID is '':
+while True:
+    if flag is True:
         APPID = register()
+        flag = False
+        
+    @handler.add(MessageEvent, message=TextMessage)
+    def handle_message(event):
 
-    getMessage = event.message.text;# ユーザが送信したメッセージ(event.message.text)を取得
-    keyword = ['なにこれ','ヘルプ','仕組み','リセット'];
+        getMessage = event.message.text;# ユーザが送信したメッセージ(event.message.text)を取得
+        keyword = ['なにこれ','ヘルプ','仕組み','リセット'];
 
-    if getMessage not in keyword:
-        #appId = register()
-        message = reply(APPID,getMessage)
-        replyMessageText(event, message)
+        if getMessage not in keyword:
+            message = reply(APPID,getMessage)
+            replyMessageText(event, message)
 
-    elif getMessage == 'なにこれ':
-        message = '私はまつりちゃん．君の言葉に反応するよ！'
-        replyMessageText(event, message)
+        elif getMessage == 'なにこれ':
+            message = '私はまつりちゃん．君の言葉に反応するよ！'
+            replyMessageText(event, message)
 
-    elif getMessage == '仕組み':
-        message = 'メッセージの送信と受信はLINEのMessageAPIを使用しているよ！このAPIで取得した君の送信内容をDoCoMoの雑談対話APIを使って返信内容を考えてるよ！'
-        replyMessageText(event, message)
+        elif getMessage == '仕組み':
+            message = 'メッセージの送信と受信はLINEのMessageAPIを使用しているよ！このAPIで取得した君の送信内容をDoCoMoの雑談対話APIを使って返信内容を考えてるよ！'
+            replyMessageText(event, message)
 
-    elif getMessage == 'ヘルプ':
-        message = '「なにこれ」：このBOTの説明をするよ\n「ヘルプ」：これ\n'
-        replyMessageText(event, message)
+        elif getMessage == 'ヘルプ':
+            message = '「なにこれ」：このBOTの説明をするよ\n「ヘルプ」：これ\n'
+            replyMessageText(event, message)
 
-    elif getMessage == 'リセット':
-        APPID = register()
-        message = 'APPIDをリセットしました'
-        replyMessageText(event, message)
+        elif getMessage == 'リセット':
+            APPID = register()
+            message = 'APPIDをリセットしました'
+            replyMessageText(event, message)
 
 # ポート番号の設定
 if __name__ == "__main__":
     #    app.run()
+    flag = True
     port = int(os.getenv("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
+    
