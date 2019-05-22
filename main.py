@@ -73,8 +73,6 @@ def register():
     appId = r.json()['appId']
     return appId
 
-APPID = register()
-
 #返信
 def reply(appId, utt_content):
     headers = {'Content-type': 'application/json;charset=UTF-8'}
@@ -114,7 +112,7 @@ def replyMessageText(event, message):
 # ここで返信メッセージを作成
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
-    if APPID == None:
+    if APPID is None:
         APPID = register()
     getMessage = event.message.text;# ユーザが送信したメッセージ(event.message.text)を取得
     keyword = ['なにこれ','ヘルプ','仕組み','リセット'];
