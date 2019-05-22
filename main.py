@@ -111,10 +111,10 @@ def replyMessageText(event, message):
 # ここで返信メッセージを作成
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
-    global APPID = None
-    
+    global APPID
     if APPID is None:
         APPID = register()
+        
     getMessage = event.message.text;# ユーザが送信したメッセージ(event.message.text)を取得
     keyword = ['なにこれ','ヘルプ','仕組み','リセット'];
 
