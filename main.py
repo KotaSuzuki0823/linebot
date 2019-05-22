@@ -21,7 +21,6 @@ app = Flask(__name__)
 # LINE Developersで設定されているアクセストークンとChannel Secretをを取得し、設定します。
 LINE_BOT_CHANNEL_TOKEN = os.environ["LINE_BOT_CHANNEL_TOKEN"]
 LINE_BOT_CHANNEL_SECRET = os.environ["LINE_BOT_CHANNEL_SECRET"]
-MSBING_IMAGE_SUBSCRIPTION_KEY = os.environ["MSBING_IMAGE_SUBSCRIPTION_KEY"]
 
 line_bot_api = LineBotApi(LINE_BOT_CHANNEL_TOKEN)
 handler = WebhookHandler(LINE_BOT_CHANNEL_SECRET)
@@ -30,7 +29,7 @@ headers = {
     'Ocp-Apim-Subscription-Key': MSBING_IMAGE_SUBSCRIPTION_KEY,
 }
 
-SEARCH_URL = "https://api.cognitive.microsoft.com/bing/v7.0/images/search"
+
 
 ## 1 ##
 # Webhookからのリクエストをチェックします。
@@ -53,53 +52,6 @@ def callback():
         abort(400)
     # handleの処理を終えればOK
     return 'OK'
-
-#Bing画像検索APIを使った画像URL取得
-def searching_image_by_q(url, headers, params, timeout=10):
-    response = requests.get(url,
-                            headers=headers,
-                            params=params,
-                            allow_redirects=True,
-                            timeout=timeout)
-
-def validate_response_from_image_url(image_url):
-    response = requests.get(image_url)
-
-def getImage(getMesege):
-    SEARCH_TERM = getMesege
-    SEARCH_URL = "https://api.cognitive.microsoft.com/bing/v7.0/images/search"
-    SUBSCRIPTION_KEY = "db484ddbe7f7490ea2e6e2641c3b7a87"
-
-    number_images_required = 1
-    number_images_per_transaction = 1
-    offset_count = math.floor(number_images_required / number_images_per_transaction)
-
-    url_list = []
-
-    headers = {
-        'Content-Type': 'multipart/form-data',
-        'Ocp-Apim-Subscription-Key': SUBSCRIPTION_KEY,
-    }
-    for offset in range(offset_count):
-        params = urllib.parse.urlencode({
-            'q': SEARCH_TERM,
-            'count': number_images_per_transaction,
-            'offset': offset * number_images_per_transaction,
-            'safeSearch': "Off",
-        })
-
-        try:
-            response = searching_image_by_q(SEARCH_URL, headers, params)
-            response_json = response.json()
-        except Exception as err:
-            print("[Error No.{0}] {1}".format(err.errno,
-                                              err.strerror))
-        else:
-            for values in response_json['value']:
-                img_url = urllib.parse.unquote(values['contentUrl'])
-                if img_url:
-                    url_list.append(img_url)
-    return img_url
 
 
 
@@ -134,21 +86,10 @@ def handle_message(event):
         replyMessageText(event, message)
 
     elif getMessage in 'の画像':
-        message = getImage(getMessage)
-        line_bot_api.reply_message(
-            event.reply_token,
-
-            imgMessage = ImageSendMessage(
-                preview_image_url = message,
-                original_content_url = message
-            )
-
-            #TextSendMessage(text=message) # 返信メッセージ
-        )
-
+        #TextSendMessage(text=message) # 返信メッセージ
 
     elif getMessage == 'ヘルプ':
-        message = '「なにこれ」：このBOTの説明をするよ\n「祭り」：祭りを始めるよ\n「ヘルプ」：これ\n「今は昼だね」：セーフサーチオン\n'
+        message = '「なにこれ」：このBOTの説明をするよ\n「ヘルプ」：これ\n'
         replyMessageText(event, message)
 
 
