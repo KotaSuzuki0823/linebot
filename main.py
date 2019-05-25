@@ -16,8 +16,9 @@ import urllib
 import math
 import json
 from _datetime import datetime
-
 app = Flask(__name__)
+
+APPID = None
 
 # 環境変数取得
 # アクセストークンとChannel Secretをを取得し、設定
@@ -107,9 +108,12 @@ def replyMessageText(event, message):
         TextSendMessage(text=message)  # 返信メッセージ
     )
 
-APPID = register()
+
 @handler.add(MessageEvent, message=TextMessage)
-def handle_message(event,APPID):
+def handle_message(event):
+    if APPID is None:
+        APPID = register()
+
     getMessage = event.message.text;# ユーザが送信したメッセージ(event.message.text)を取得
     keyword = ['なにこれ','ヘルプ','仕組み','リセット'];
 
@@ -137,7 +141,6 @@ def handle_message(event,APPID):
 # ポート番号の設定
 if __name__ == "__main__":
     #    app.run()
-    flag = True
     port = int(os.getenv("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
     
