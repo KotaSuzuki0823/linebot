@@ -28,7 +28,6 @@ DOCOMOAPI_CLIENT_ID = os.environ["DOCOMOAPI_CLIENT_ID"]
 DOCOMOAPI_CLIENT_SECRET = os.environ["DOCOMOAPI_CLIENT_SECRET"]
 
 DOCOMOAPI_API_KEY= os.environ["DOCOMOAPI_API_KEY"]
-APPID = register()
 
 line_bot_api = LineBotApi(LINE_BOT_CHANNEL_TOKEN)
 handler = WebhookHandler(LINE_BOT_CHANNEL_SECRET)
@@ -108,6 +107,7 @@ def replyMessageText(event, message):
         TextSendMessage(text=message)  # 返信メッセージ
     )
 
+APPID = register()
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event,APPID):
     getMessage = event.message.text;# ユーザが送信したメッセージ(event.message.text)を取得
